@@ -1,18 +1,22 @@
 export default function Home() {
   return (
-    <main className="min-h-screen flex flex-col items-center justify-center bg-white px-6 text-center">
-      <h1 className="text-5xl font-bold text-slate-900">
-        Financial Copilot México
-      </h1>
+    <main className="min-h-screen flex items-center justify-center bg-gray-50">
+      <div className="max-w-xl w-full bg-white shadow-lg rounded-xl p-8 text-center">
+        <h1 className="text-4xl font-bold mb-4">
+          Financial Copilot México
+        </h1>
 
-      <p className="mt-6 max-w-2xl text-lg text-slate-600">
-        Decide cómo distribuir el ingreso que acabas de recibir sin poner en
-        riesgo tus gastos esenciales.
-      </p>
+        <p className="text-gray-600 mb-8">
+          Descubre cómo distribuir tu dinero entre tus gastos esenciales y tus
+          deudas para avanzar hacia tu libertad financiera.
+        </p>
 
-      <button className="mt-10 rounded-xl bg-blue-600 px-8 py-4 text-lg font-semibold text-white hover:bg-blue-700">
-        Comenzar mi plan
-      </button>
+        <button
+          className="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 px-8 rounded-lg transition"
+        >
+          Comenzar
+        </button>
+      </div>
     </main>
   );
 }
