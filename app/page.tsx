@@ -3,8 +3,11 @@
 import React, { useState } from 'react';
 import WelcomeScreen from '@/components/WelcomeScreen';
 import IncomeScreen from '@/components/IncomeScreen';
+import { ExpensesScreen } from '@/components/ExpensesScreen';
 import { DebtsScreen } from '@/components/DebtsScreen';
-import { Debt } from '@/types/financial';
+import { ResultsScreen } from '@/components/ResultsScreen';
+import { calculatePaymentPlan } from '@/lib/calculatePaymentPlan';
+import { Debt, EssentialExpense, FinancialResult } from '@/types/financial';
 
 export default function Home() {
   const [step, setStep] = useState<number>(1);
@@ -13,6 +16,7 @@ export default function Home() {
   const [food, setFood] = useState<string>('');
   const [utilities, setUtilities] = useState<string>('');
   const [debts, setDebts] = useState<Debt[]>([]);
+  const [result, setResult] = useState<FinancialResult | null>(null);
 
   const handleAddDebt = (debt: Debt) => {
     setDebts((prev) => [...prev, debt]);
@@ -20,6 +24,34 @@ export default function Home() {
 
   const handleRemoveDebt = (id: string) => {
     setDebts((prev) => prev.filter((d) => d.id !== id));
+  };
+
+  const handleCalculate = () => {
+    const essentialExpenses: EssentialExpense[] = [
+      { name: 'Renta / Vivienda', amount: parseFloat(rent) || 0 },
+      { name: 'Comida', amount: parseFloat(food) || 0 },
+      { name: 'Servicios', amount: parseFloat(utilities) || 0 },
+    ].filter((exp) => exp.amount > 0);
+
+    const calcResult = calculatePaymentPlan({
+      income: parseFloat(income) || 0,
+      essentialExpenses,
+      safetyBuffer: 0,
+      debts,
+    });
+
+    setResult(calcResult);
+    setStep(5);
+  };
+
+  const handleReset = () => {
+    setIncome('');
+    setRent('');
+    setFood('');
+    setUtilities('');
+    setDebts([]);
+    setResult(null);
+    setStep(1);
   };
 
   return (
@@ -37,62 +69,16 @@ export default function Home() {
       )}
 
       {step === 3 && (
-        <div className="max-w-md w-full bg-white rounded-xl shadow-md p-6 space-y-4">
-          <h2 className="text-xl font-bold text-gray-800">Gastos Esenciales</h2>
-          <p className="text-sm text-gray-600">
-            Protege lo indispensable antes de pagar deudas.
-          </p>
-
-          <div className="space-y-3">
-            <div>
-              <label className="block text-xs font-medium text-gray-600 mb-1">Renta / Vivienda ($)</label>
-              <input
-                type="number"
-                placeholder="0"
-                value={rent}
-                onChange={(e) => setRent(e.target.value)}
-                className="w-full p-2 border rounded-md text-sm text-gray-900 bg-white"
-              />
-            </div>
-            <div>
-              <label className="block text-xs font-medium text-gray-600 mb-1">Comida ($)</label>
-              <input
-                type="number"
-                placeholder="0"
-                value={food}
-                onChange={(e) => setFood(e.target.value)}
-                className="w-full p-2 border rounded-md text-sm text-gray-900 bg-white"
-              />
-            </div>
-            <div>
-              <label className="block text-xs font-medium text-gray-600 mb-1">Servicios ($)</label>
-              <input
-                type="number"
-                placeholder="0"
-                value={utilities}
-                onChange={(e) => setUtilities(e.target.value)}
-                className="w-full p-2 border rounded-md text-sm text-gray-900 bg-white"
-              />
-            </div>
-          </div>
-
-          <div className="flex justify-between pt-4 border-t">
-            <button
-              type="button"
-              onClick={() => setStep(2)}
-              className="px-4 py-2 bg-gray-200 text-gray-700 rounded-md text-sm font-medium hover:bg-gray-300 transition"
-            >
-              Atrás
-            </button>
-            <button
-              type="button"
-              onClick={() => setStep(4)}
-              className="px-6 py-2 bg-blue-600 text-white rounded-md text-sm font-medium hover:bg-blue-700 transition"
-            >
-              Continuar
-            </button>
-          </div>
-        </div>
+        <ExpensesScreen
+          rent={rent}
+          food={food}
+          utilities={utilities}
+          onRentChange={setRent}
+          onFoodChange={setFood}
+          onUtilitiesChange={setUtilities}
+          onContinue={() => setStep(4)}
+          onBack={() => setStep(2)}
+        />
       )}
 
       {step === 4 && (
@@ -100,8 +86,16 @@ export default function Home() {
           debts={debts}
           onAddDebt={handleAddDebt}
           onRemoveDebt={handleRemoveDebt}
-          onNext={() => alert('¡Captura de deudas lista! Siguiente paso: ResultsScreen')}
+          onNext={handleCalculate}
           onBack={() => setStep(3)}
+        />
+      )}
+
+      {step === 5 && result && (
+        <ResultsScreen
+          result={result}
+          onReset={handleReset}
+          onBack={() => setStep(4)}
         />
       )}
     </main>
