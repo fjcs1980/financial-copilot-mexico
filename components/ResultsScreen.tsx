@@ -82,7 +82,7 @@ export const ResultsScreen: React.FC<ResultsScreenProps> = ({
       <div className="space-y-3">
         <h3 className="font-semibold text-gray-700 text-sm">Distribución por Deuda</h3>
         <div className="overflow-x-auto">
-          <table className="w-full text-left text-xs text-gray-700 border border-gray-200 rounded-lg">
+          <table className="w-full text-left text-xs text-gray-700 border border-gray-200 rounded-lg overflow-hidden">
             <thead className="bg-gray-100 text-gray-600 uppercase font-semibold">
               <tr>
                 <th className="p-3">Deuda</th>

@@ -3,7 +3,7 @@ import {
   FinancialResult,
   PaymentRecommendation,
   PlanStatus,
-} from '../types/financial';
+} from '@/types/financial';
 
 export function calculatePaymentPlan(input: FinancialInput): FinancialResult {
   const { income, essentialExpenses, safetyBuffer, debts } = input;
@@ -90,7 +90,7 @@ export function calculatePaymentPlan(input: FinancialInput): FinancialResult {
 
   const priorityDebtId = sortedDebts.length > 0 ? sortedDebts[0].id : null;
 
-  // Mapa temporal para pagos adicionales calculados
+  // Mapa temporal para almacenar pagos adicionales calculados
   const extraAllocations = new Map<string, number>();
   sortedDebts.forEach((debt) => extraAllocations.set(debt.id, 0));
 
@@ -105,7 +105,7 @@ export function calculatePaymentPlan(input: FinancialInput): FinancialResult {
     extraAvailable -= extraToApply;
   }
 
-  // Construir recomendaciones finales respetando el orden original de entrada
+  // Construir recomendaciones finales manteniendo el orden original de entrada
   const recommendations: PaymentRecommendation[] = debts.map((debt) => {
     const extraPayment = extraAllocations.get(debt.id) || 0;
     const recommendedPayment = Math.min(debt.balance, debt.minimumPayment + extraPayment);
