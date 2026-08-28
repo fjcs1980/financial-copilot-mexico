@@ -15,6 +15,7 @@ export default function Home() {
   const [rent, setRent] = useState<string>('');
   const [food, setFood] = useState<string>('');
   const [utilities, setUtilities] = useState<string>('');
+  const [safetyBuffer, setSafetyBuffer] = useState<string>('');
   const [debts, setDebts] = useState<Debt[]>([]);
   const [result, setResult] = useState<FinancialResult | null>(null);
 
@@ -28,15 +29,15 @@ export default function Home() {
 
   const handleCalculate = () => {
     const essentialExpenses: EssentialExpense[] = [
-      { name: 'Renta / Vivienda', amount: parseFloat(rent) || 0 },
-      { name: 'Comida', amount: parseFloat(food) || 0 },
-      { name: 'Servicios', amount: parseFloat(utilities) || 0 },
+      { name: 'Renta / Vivienda', amount: Math.max(0, parseFloat(rent) || 0) },
+      { name: 'Comida', amount: Math.max(0, parseFloat(food) || 0) },
+      { name: 'Servicios', amount: Math.max(0, parseFloat(utilities) || 0) },
     ].filter((exp) => exp.amount > 0);
 
     const calcResult = calculatePaymentPlan({
-      income: parseFloat(income) || 0,
+      income: Math.max(0, parseFloat(income) || 0),
       essentialExpenses,
-      safetyBuffer: 0,
+      safetyBuffer: Math.max(0, parseFloat(safetyBuffer) || 0),
       debts,
     });
 
@@ -49,6 +50,7 @@ export default function Home() {
     setRent('');
     setFood('');
     setUtilities('');
+    setSafetyBuffer('');
     setDebts([]);
     setResult(null);
     setStep(1);
@@ -73,9 +75,11 @@ export default function Home() {
           rent={rent}
           food={food}
           utilities={utilities}
+          safetyBuffer={safetyBuffer}
           onRentChange={setRent}
           onFoodChange={setFood}
           onUtilitiesChange={setUtilities}
+          onSafetyBufferChange={setSafetyBuffer}
           onContinue={() => setStep(4)}
           onBack={() => setStep(2)}
         />
