@@ -80,7 +80,7 @@ export function calculatePaymentPlan(input: FinancialInput): FinancialResult {
   // Caso C: Se cubren los mínimos y puede haber excedente
   let extraAvailable = availableForDebt - minimumPaymentsTotal;
 
-  // Ordenar deudas para aplicar estrategia: Mayor APR descendente; desempate por menor saldo
+  // Ordenar deudas: Mayor APR descendente; desempate por menor saldo
   const sortedDebts = [...debts].sort((a, b) => {
     if (b.apr !== a.apr) {
       return b.apr - a.apr;

@@ -3,6 +3,7 @@
 import React, { useState } from 'react';
 import WelcomeScreen from '@/components/WelcomeScreen';
 import IncomeScreen from '@/components/IncomeScreen';
+import { ExpensesScreen } from '@/components/ExpensesScreen';
 import { DebtsScreen } from '@/components/DebtsScreen';
 import { ResultsScreen } from '@/components/ResultsScreen';
 import { calculatePaymentPlan } from '@/lib/calculatePaymentPlan';
@@ -62,68 +63,22 @@ export default function Home() {
       {step === 2 && (
         <IncomeScreen
           income={income}
-          onIncomeChange={setIncome}
+          onIncomeChange={(val) => setIncome(val)}
           onContinue={() => setStep(3)}
         />
       )}
 
       {step === 3 && (
-        <div className="max-w-md w-full bg-white rounded-xl shadow-md p-6 space-y-4">
-          <h2 className="text-xl font-bold text-gray-800">Gastos Esenciales</h2>
-          <p className="text-sm text-gray-600">
-            Protege lo indispensable antes de pagar deudas.
-          </p>
-
-          <div className="space-y-3">
-            <div>
-              <label className="block text-xs font-medium text-gray-600 mb-1">Renta / Vivienda ($)</label>
-              <input
-                type="number"
-                placeholder="0"
-                value={rent}
-                onChange={(e) => setRent(e.target.value)}
-                className="w-full p-2 border rounded-md text-sm text-gray-900 bg-white"
-              />
-            </div>
-            <div>
-              <label className="block text-xs font-medium text-gray-600 mb-1">Comida ($)</label>
-              <input
-                type="number"
-                placeholder="0"
-                value={food}
-                onChange={(e) => setFood(e.target.value)}
-                className="w-full p-2 border rounded-md text-sm text-gray-900 bg-white"
-              />
-            </div>
-            <div>
-              <label className="block text-xs font-medium text-gray-600 mb-1">Servicios ($)</label>
-              <input
-                type="number"
-                placeholder="0"
-                value={utilities}
-                onChange={(e) => setUtilities(e.target.value)}
-                className="w-full p-2 border rounded-md text-sm text-gray-900 bg-white"
-              />
-            </div>
-          </div>
-
-          <div className="flex justify-between pt-4 border-t">
-            <button
-              type="button"
-              onClick={() => setStep(2)}
-              className="px-4 py-2 bg-gray-200 text-gray-700 rounded-md text-sm font-medium hover:bg-gray-300 transition"
-            >
-              Atrás
-            </button>
-            <button
-              type="button"
-              onClick={() => setStep(4)}
-              className="px-6 py-2 bg-blue-600 text-white rounded-md text-sm font-medium hover:bg-blue-700 transition"
-            >
-              Continuar
-            </button>
-          </div>
-        </div>
+        <ExpensesScreen
+          rent={rent}
+          food={food}
+          utilities={utilities}
+          onRentChange={(val) => setRent(val)}
+          onFoodChange={(val) => setFood(val)}
+          onUtilitiesChange={(val) => setUtilities(val)}
+          onContinue={() => setStep(4)}
+          onBack={() => setStep(2)}
+        />
       )}
 
       {step === 4 && (

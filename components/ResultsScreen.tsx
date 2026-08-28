@@ -33,7 +33,6 @@ export const ResultsScreen: React.FC<ResultsScreenProps> = ({
         </p>
       </div>
 
-      {/* Resumen del dinero protegido y disponible */}
       <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 bg-gray-50 p-4 rounded-lg border border-gray-200 text-center">
         <div>
           <span className="block text-xs text-gray-500">Ingreso</span>
@@ -53,7 +52,6 @@ export const ResultsScreen: React.FC<ResultsScreenProps> = ({
         </div>
       </div>
 
-      {/* Estado: No hay dinero para deuda */}
       {status === 'NO_MONEY_FOR_DEBT' && (
         <div className="p-4 bg-amber-50 border-l-4 border-amber-500 rounded-r-md">
           <h3 className="font-semibold text-amber-800 text-sm">Prioridad: Proteger tus necesidades esenciales</h3>
@@ -63,7 +61,6 @@ export const ResultsScreen: React.FC<ResultsScreenProps> = ({
         </div>
       )}
 
-      {/* Estado: No alcanza para mínimos */}
       {status === 'MINIMUMS_NOT_COVERED' && (
         <div className="p-4 bg-amber-50 border-l-4 border-amber-500 rounded-r-md">
           <h3 className="font-semibold text-amber-800 text-sm">Mínimos requeridos no cubiertos</h3>
@@ -73,7 +70,6 @@ export const ResultsScreen: React.FC<ResultsScreenProps> = ({
         </div>
       )}
 
-      {/* Estado: Plan disponible */}
       {status === 'PAYMENT_PLAN_AVAILABLE' && (
         <div className="p-4 bg-emerald-50 border-l-4 border-emerald-500 rounded-r-md">
           <h3 className="font-semibold text-emerald-800 text-sm">Plan de pago optimizado</h3>
@@ -83,7 +79,6 @@ export const ResultsScreen: React.FC<ResultsScreenProps> = ({
         </div>
       )}
 
-      {/* Tabla de recomendaciones */}
       <div className="space-y-3">
         <h3 className="font-semibold text-gray-700 text-sm">Distribución por Deuda</h3>
         <div className="overflow-x-auto">
@@ -116,7 +111,6 @@ export const ResultsScreen: React.FC<ResultsScreenProps> = ({
         </div>
       </div>
 
-      {/* Acciones */}
       <div className="flex justify-between pt-4 border-t">
         <button
           type="button"
