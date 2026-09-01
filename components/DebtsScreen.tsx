@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { Debt } from '@/types/financial';
+import { formatCurrency } from '@/lib/formatCurrency';
 
 interface DebtsScreenProps {
   debts: Debt[];
@@ -156,7 +157,7 @@ export const DebtsScreen: React.FC<DebtsScreenProps> = ({
                 <div>
                   <span className="font-medium text-gray-900">{debt.name}</span>
                   <div className="text-xs text-gray-500">
-                    Saldo: ${debt.balance.toLocaleString()} | Mínimo: ${debt.minimumPayment.toLocaleString()} | APR: {debt.apr}%
+                    Saldo: {formatCurrency(debt.balance)} | Mínimo: {formatCurrency(debt.minimumPayment)} | APR: {debt.apr}%
                   </div>
                 </div>
                 <button

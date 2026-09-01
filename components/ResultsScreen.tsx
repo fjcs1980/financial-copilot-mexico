@@ -1,5 +1,6 @@
 import React from 'react';
 import { FinancialResult } from '@/types/financial';
+import { formatCurrency } from '@/lib/formatCurrency';
 
 interface ResultsScreenProps {
   result: FinancialResult;
@@ -16,7 +17,6 @@ export const ResultsScreen: React.FC<ResultsScreenProps> = ({
     status,
     income,
     essentialExpensesTotal,
-    safetyBuffer,
     protectedAmount,
     availableForDebt,
     minimumPaymentsTotal,
@@ -37,19 +37,19 @@ export const ResultsScreen: React.FC<ResultsScreenProps> = ({
       <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 bg-gray-50 p-4 rounded-lg border border-gray-200 text-center">
         <div>
           <span className="block text-xs text-gray-500">Ingreso</span>
-          <span className="text-base font-bold text-gray-800">${income.toLocaleString()}</span>
+          <span className="text-base font-bold text-gray-800">{formatCurrency(income)}</span>
         </div>
         <div>
           <span className="block text-xs text-gray-500">Gastos Básicos</span>
-          <span className="text-base font-bold text-gray-800">${essentialExpensesTotal.toLocaleString()}</span>
+          <span className="text-base font-bold text-gray-800">{formatCurrency(essentialExpensesTotal)}</span>
         </div>
         <div>
           <span className="block text-xs text-gray-500">Protegido Total</span>
-          <span className="text-base font-bold text-blue-600">${protectedAmount.toLocaleString()}</span>
+          <span className="text-base font-bold text-blue-600">{formatCurrency(protectedAmount)}</span>
         </div>
         <div>
           <span className="block text-xs text-gray-500">Para Deuda</span>
-          <span className="text-base font-bold text-emerald-600">${availableForDebt.toLocaleString()}</span>
+          <span className="text-base font-bold text-emerald-600">{formatCurrency(availableForDebt)}</span>
         </div>
       </div>
 
@@ -68,7 +68,7 @@ export const ResultsScreen: React.FC<ResultsScreenProps> = ({
         <div className="p-4 bg-amber-50 border-l-4 border-amber-500 rounded-r-md">
           <h3 className="font-semibold text-amber-800 text-sm">Mínimos requeridos no cubiertos</h3>
           <p className="text-xs text-amber-700 mt-1">
-            Los mínimos suman ${minimumPaymentsTotal.toLocaleString()}, dejando una diferencia de ${deficit.toLocaleString()}. Te sugerimos proteger primero tus gastos indispensables.
+            Los mínimos suman {formatCurrency(minimumPaymentsTotal)}, dejando una diferencia de {formatCurrency(deficit)}. Te sugerimos proteger primero tus gastos indispensables.
           </p>
         </div>
       )}
@@ -101,13 +101,13 @@ export const ResultsScreen: React.FC<ResultsScreenProps> = ({
               {recommendations.map((rec) => (
                 <tr key={rec.debtId} className="hover:bg-gray-50">
                   <td className="p-3 font-medium text-gray-900">{rec.debtName}</td>
-                  <td className="p-3">${rec.currentBalance.toLocaleString()}</td>
-                  <td className="p-3">${rec.minimumPayment.toLocaleString()}</td>
+                  <td className="p-3">{formatCurrency(rec.currentBalance)}</td>
+                  <td className="p-3">{formatCurrency(rec.minimumPayment)}</td>
                   <td className="p-3 font-semibold text-emerald-600">
-                    {rec.extraPayment > 0 ? `+$${rec.extraPayment.toLocaleString()}` : '$0'}
+                    {rec.extraPayment > 0 ? `+${formatCurrency(rec.extraPayment)}` : '$0.00'}
                   </td>
                   <td className="p-3 font-bold text-gray-900 bg-emerald-50/50">
-                    ${rec.recommendedPayment.toLocaleString()}
+                    {formatCurrency(rec.recommendedPayment)}
                   </td>
                 </tr>
               ))}
