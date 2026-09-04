@@ -8,9 +8,12 @@ import { DebtsScreen } from '@/components/DebtsScreen';
 import { ResultsScreen } from '@/components/ResultsScreen';
 import { ProgressStepper } from '@/components/ProgressStepper';
 import { calculatePaymentPlan } from '@/lib/calculatePaymentPlan';
+import {
+  loadSession,
+  saveSession,
+  clearSession,
+} from '@/lib/sessionStorage';
 import { Debt, EssentialExpense, FinancialResult } from '@/types/financial';
-
-const STORAGE_KEY = 'financial_copilot_session_v1';
 
 export default function Home() {
   const [isLoaded, setIsLoaded] = useState<boolean>(false);
@@ -24,43 +27,33 @@ export default function Home() {
   const [result, setResult] = useState<FinancialResult | null>(null);
 
   useEffect(() => {
-    try {
-      const savedData = localStorage.getItem(STORAGE_KEY);
-      if (savedData) {
-        const parsed = JSON.parse(savedData);
-        if (parsed.step) setStep(parsed.step);
-        if (parsed.income) setIncome(parsed.income);
-        if (parsed.rent) setRent(parsed.rent);
-        if (parsed.food) setFood(parsed.food);
-        if (parsed.utilities) setUtilities(parsed.utilities);
-        if (parsed.safetyBuffer) setSafetyBuffer(parsed.safetyBuffer);
-        if (parsed.debts) setDebts(parsed.debts);
-        if (parsed.result) setResult(parsed.result);
-      }
-    } catch (e) {
-      console.error('Error cargando sesión previa de localStorage', e);
-    } finally {
-      setIsLoaded(true);
+    if (typeof window !== 'undefined') {
+      const restored = loadSession(window.localStorage);
+      setStep(restored.step);
+      setIncome(restored.income);
+      setRent(restored.rent);
+      setFood(restored.food);
+      setUtilities(restored.utilities);
+      setSafetyBuffer(restored.safetyBuffer);
+      setDebts(restored.debts);
+      setResult(restored.result);
     }
+    setIsLoaded(true);
   }, []);
 
   useEffect(() => {
-    if (!isLoaded) return;
-    try {
-      const sessionData = {
-        step,
-        income,
-        rent,
-        food,
-        utilities,
-        safetyBuffer,
-        debts,
-        result,
-      };
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(sessionData));
-    } catch (e) {
-      console.error('Error guardando sesión en localStorage', e);
-    }
+    if (!isLoaded || typeof window === 'undefined') return;
+
+    saveSession(window.localStorage, {
+      step,
+      income,
+      rent,
+      food,
+      utilities,
+      safetyBuffer,
+      debts,
+      result,
+    });
   }, [step, income, rent, food, utilities, safetyBuffer, debts, result, isLoaded]);
 
   const handleAddDebt = (debt: Debt) => {
@@ -98,10 +91,9 @@ export default function Home() {
     setDebts([]);
     setResult(null);
     setStep(1);
-    try {
-      localStorage.removeItem(STORAGE_KEY);
-    } catch (e) {
-      console.error('Error limpiando sesión en localStorage', e);
+
+    if (typeof window !== 'undefined') {
+      clearSession(window.localStorage);
     }
   };
 
