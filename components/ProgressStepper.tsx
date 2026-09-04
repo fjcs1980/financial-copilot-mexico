@@ -13,15 +13,18 @@ const STEPS = [
 
 export const ProgressStepper: React.FC<ProgressStepperProps> = ({ currentStep }) => {
   return (
-    <div className="w-full max-w-xl mx-auto mb-6 px-4">
-      <div className="flex items-center justify-between relative">
+    <nav aria-label="Progreso del cálculo financiero" className="w-full max-w-xl mx-auto mb-6 px-4">
+      <ol className="flex items-center justify-between relative list-none m-0 p-0">
         {STEPS.map((s, index) => {
           const isCompleted = currentStep > s.step;
           const isCurrent = currentStep === s.step;
 
           return (
             <React.Fragment key={s.step}>
-              <div className="flex flex-col items-center z-10">
+              <li
+                className="flex flex-col items-center z-10"
+                aria-current={isCurrent ? 'step' : undefined}
+              >
                 <div
                   className={`w-8 h-8 rounded-full flex items-center justify-center text-xs font-bold transition-colors ${
                     isCompleted
@@ -30,6 +33,13 @@ export const ProgressStepper: React.FC<ProgressStepperProps> = ({ currentStep })
                       ? 'bg-blue-600 text-white ring-4 ring-blue-100'
                       : 'bg-gray-200 text-gray-500'
                   }`}
+                  aria-label={
+                    isCompleted
+                      ? `Paso ${index + 1}: ${s.label} completado`
+                      : isCurrent
+                      ? `Paso actual ${index + 1}: ${s.label}`
+                      : `Paso ${index + 1}: ${s.label}`
+                  }
                 >
                   {isCompleted ? '✓' : index + 1}
                 </div>
@@ -40,10 +50,11 @@ export const ProgressStepper: React.FC<ProgressStepperProps> = ({ currentStep })
                 >
                   {s.label}
                 </span>
-              </div>
+              </li>
 
               {index < STEPS.length - 1 && (
-                <div
+                <li
+                  aria-hidden="true"
                   className={`flex-1 h-0.5 mx-2 -mt-4 transition-colors ${
                     currentStep > s.step ? 'bg-emerald-500' : 'bg-gray-200'
                   }`}
@@ -52,7 +63,7 @@ export const ProgressStepper: React.FC<ProgressStepperProps> = ({ currentStep })
             </React.Fragment>
           );
         })}
-      </div>
-    </div>
+      </ol>
+    </nav>
   );
 };
