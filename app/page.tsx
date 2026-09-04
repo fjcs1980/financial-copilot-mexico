@@ -6,6 +6,7 @@ import IncomeScreen from '@/components/IncomeScreen';
 import { ExpensesScreen } from '@/components/ExpensesScreen';
 import { DebtsScreen } from '@/components/DebtsScreen';
 import { ResultsScreen } from '@/components/ResultsScreen';
+import { ProgressStepper } from '@/components/ProgressStepper';
 import { calculatePaymentPlan } from '@/lib/calculatePaymentPlan';
 import { Debt, EssentialExpense, FinancialResult } from '@/types/financial';
 
@@ -113,7 +114,9 @@ export default function Home() {
   }
 
   return (
-    <main className="min-h-screen bg-gray-100 flex items-center justify-center p-4">
+    <main className="min-h-screen bg-gray-100 flex flex-col items-center justify-center p-4">
+      {step > 1 && <ProgressStepper currentStep={step} />}
+
       {step === 1 && (
         <WelcomeScreen onStart={() => setStep(2)} />
       )}
